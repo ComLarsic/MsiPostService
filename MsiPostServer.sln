@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostServer", "MsiPostServer\MsiPostServer.csproj", "{A54C6DBF-A105-4FDE-BCBA-C235BC2D6A87}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orm", "Orm", "{91C7A8D9-E9F2-490F-BF06-805DF788BBEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostOrmSqlite", "Orm\MsiPostOrmSqlite\MsiPostOrmSqlite.csproj", "{FB68BAF0-20D9-4C97-ABF4-042DC5ABBCA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostOrm", "Orm\MsiPostOrm\MsiPostOrm.csproj", "{AA8AB4FB-672C-4492-90BE-B446249DCD80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostOrmService", "Orm\MsiPostOrmService\MsiPostOrmService.csproj", "{17574921-65D6-415D-8DDB-D5BA523F737D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostProfile", "MsiPostProfiles\MsiPostProfile.csproj", "{860709FD-B180-47C4-97FD-9960C9B4F42A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiMojangApiWrapper", "MsiMojangApiWrapper\MsiMojangApiWrapper.csproj", "{9A9CEAA6-79EB-4305-8224-473587A4D40F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A54C6DBF-A105-4FDE-BCBA-C235BC2D6A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54C6DBF-A105-4FDE-BCBA-C235BC2D6A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54C6DBF-A105-4FDE-BCBA-C235BC2D6A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54C6DBF-A105-4FDE-BCBA-C235BC2D6A87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB68BAF0-20D9-4C97-ABF4-042DC5ABBCA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB68BAF0-20D9-4C97-ABF4-042DC5ABBCA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB68BAF0-20D9-4C97-ABF4-042DC5ABBCA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB68BAF0-20D9-4C97-ABF4-042DC5ABBCA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA8AB4FB-672C-4492-90BE-B446249DCD80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA8AB4FB-672C-4492-90BE-B446249DCD80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA8AB4FB-672C-4492-90BE-B446249DCD80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA8AB4FB-672C-4492-90BE-B446249DCD80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17574921-65D6-415D-8DDB-D5BA523F737D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17574921-65D6-415D-8DDB-D5BA523F737D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17574921-65D6-415D-8DDB-D5BA523F737D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17574921-65D6-415D-8DDB-D5BA523F737D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{860709FD-B180-47C4-97FD-9960C9B4F42A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{860709FD-B180-47C4-97FD-9960C9B4F42A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{860709FD-B180-47C4-97FD-9960C9B4F42A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{860709FD-B180-47C4-97FD-9960C9B4F42A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A9CEAA6-79EB-4305-8224-473587A4D40F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A9CEAA6-79EB-4305-8224-473587A4D40F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A9CEAA6-79EB-4305-8224-473587A4D40F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A9CEAA6-79EB-4305-8224-473587A4D40F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FB68BAF0-20D9-4C97-ABF4-042DC5ABBCA9} = {91C7A8D9-E9F2-490F-BF06-805DF788BBEA}
+		{AA8AB4FB-672C-4492-90BE-B446249DCD80} = {91C7A8D9-E9F2-490F-BF06-805DF788BBEA}
+		{17574921-65D6-415D-8DDB-D5BA523F737D} = {91C7A8D9-E9F2-490F-BF06-805DF788BBEA}
+	EndGlobalSection
+EndGlobal

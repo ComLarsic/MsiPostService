@@ -1,0 +1,9 @@
+**/bin
+**/obj
+**/Migrations/
+**/msipost.db
+**/msipost.db-shm
+**/msipost.db-wal
+
+.vscode
+.idea
