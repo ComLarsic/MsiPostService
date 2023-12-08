@@ -1,4 +1,4 @@
-name: Build and Tests using dotnet ${{ matrix.dotnet-version }}
+name: Run Tests
 
 on: [push]
 

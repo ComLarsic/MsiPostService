@@ -1,4 +1,4 @@
-name: Build using dotnet ${{ matrix.dotnet-version }}
+name: Build
 
 on: [push]
 
