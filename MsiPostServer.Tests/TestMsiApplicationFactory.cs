@@ -4,9 +4,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using MsiMojangApiWrapper;
+using MsiMojangApiWrapper.DTO;
 using MsiPostOrm;
 using MsiPostOrmSqlite;
 using MsiPostOrmUtility;
+using MsiPostProfile;
+using MsiPosts;
+using MsiPosts.DTO;
 
 namespace MsiPostServer.Tests;
 
@@ -16,6 +22,13 @@ namespace MsiPostServer.Tests;
 public class TestMsiApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 {
+    // Flag to mock the MojangApiWrapper
+    private bool _mockMojangApiWrapper = false;
+    // Flag to mock msi profile service
+    private bool _mockMsiProfileService = false;
+    // Flag to mock msi post service
+    private bool _mockMsiPostService = false;
+
     /// <summary>
     /// Creates a <see cref="IHostBuilder"/> used to set up the <see cref="IHost"/> for the test server.
     /// </summary>
@@ -31,6 +44,117 @@ public class TestMsiApplicationFactory<TProgram>
 
             services.Remove(dbContextDescriptor ?? throw new InvalidOperationException());
             MsiPostOrmService.CreateInMemory(MsiPostOrmBackend.Sqlite, services);
+
+            // Add mock IMojangApiWrapper
+            if (_mockMojangApiWrapper)
+            {
+                var mojangApiWrapperDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(IMojangApiWrapper));
+
+                services.Remove(mojangApiWrapperDescriptor ?? throw new InvalidOperationException());
+                services.AddSingleton(CreateMockMojangApiWrapper().Object);
+            }
+
+            // Add mock IMsiProfileService
+            if (_mockMsiProfileService)
+            {
+                var msiProfileServiceDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(IMsiProfileService));
+
+                services.Remove(msiProfileServiceDescriptor ?? throw new InvalidOperationException());
+                services.AddSingleton(CreateMockMsiProfileService().Object);
+            }
+
+            // Add mock IMsiPostService
+            if (_mockMsiPostService)
+            {
+                var msiPostServiceDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(IMsiPostService));
+
+                services.Remove(msiPostServiceDescriptor ?? throw new InvalidOperationException());
+                services.AddSingleton(CreateMockMsiPostService().Object);
+            }
         });
+
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
+    }
+
+    /// <summary>
+    /// Create a mock IMojangApiWrapper
+    /// </summary>
+    /// <returns></returns>
+    private static Mock<IMojangApiWrapper> CreateMockMojangApiWrapper()
+    {
+        var mock = new Mock<IMojangApiWrapper>();
+        mock.Setup(m => m.GetProfileAsync(It.IsAny<Guid>())).ReturnsAsync(new MojangProfileDTO
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Test"
+        });
+        return mock;
+    }
+
+    /// <summary>
+    /// Create a mock IMsiProfileService
+    /// </summary>
+    /// <returns></returns>
+    private static Mock<IMsiProfileService> CreateMockMsiProfileService()
+    {
+        var mock = new Mock<IMsiProfileService>();
+        mock.Setup(m => m.GetProfileAsync(It.IsAny<Guid>())).ReturnsAsync(new Profile
+        {
+            Id = Guid.NewGuid(),
+        });
+        return mock;
+    }
+
+    /// <summary>
+    /// Create a mock IMsiPostService
+    /// </summary>
+    /// <returns></returns>
+    private static Mock<IMsiPostService> CreateMockMsiPostService()
+    {
+        var mock = new Mock<IMsiPostService>();
+        mock.Setup(m => m.GetPostAsync(It.IsAny<Guid>())).ReturnsAsync(new PostDTO
+        {
+            Id = Guid.NewGuid(),
+            ProfileId = Guid.NewGuid(),
+            Text = "Test",
+            CreatedAt = DateTime.Now
+        });
+        return mock;
+    }
+
+    /// <summary>
+    /// Enable mocking of the MojangApiWrapper
+    /// </summary>
+    /// <returns></returns>
+    public TestMsiApplicationFactory<TProgram> WithMockMojangApiWrapper()
+    {
+        _mockMojangApiWrapper = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Enable mocking of the MsiProfileService
+    /// </summary>
+    /// <returns></returns>
+    public TestMsiApplicationFactory<TProgram> WithMockMsiProfileService()
+    {
+        _mockMsiProfileService = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Enable mocking of the MsiPostService
+    /// </summary>
+    /// <returns></returns>
+    public TestMsiApplicationFactory<TProgram> WithMockMsiPostService()
+    {
+        _mockMsiPostService = true;
+        return this;
     }
 }

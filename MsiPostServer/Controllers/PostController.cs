@@ -71,7 +71,13 @@ public class PostController : Controller
             Id = post.Value.Id,
             Text = post.Value.Text,
             ProfileId = post.Value.ProfileId,
-            CreatedAt = post.Value.CreatedAt
+            CreatedAt = post.Value.CreatedAt,
+            Likes = post.Value.Likes.Select(l => new LikeDTO
+            {
+                Id = l.Id,
+                PostId = l.PostId,
+                ProfileId = l.ProfileId,
+            }).ToList(),
         };
     }
 }

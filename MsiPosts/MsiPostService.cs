@@ -19,22 +19,19 @@ public class MsiPostService : IMsiPostService
         => _ormService = ormService;
 
     public async Task<Guid> CreatePostAsync(Guid profile, string text)
-    {
-        Guid id = Guid.NewGuid();
-        await _ormService.Context(async db =>
+        => await _ormService.Context(async db =>
         {
             var entity = new PostEntity
             {
-                Id = id,
+                Id = Guid.NewGuid(),
                 ProfileId = profile,
                 Text = text,
                 CreatedAt = DateTime.UtcNow,
             };
             await db.AddAsync(entity);
             await db.SaveChangesAsync();
+            return entity.Id;
         });
-        return id;
-    }
 
 
     public async Task DeletePostAsync(Guid id)

@@ -23,7 +23,7 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] ProfileCreateDTO profileCreateDTO)
+    public async Task<IActionResult> Create([FromBody] CreateProfileDTO profileCreateDTO)
     {
         // Create the profile.
         try

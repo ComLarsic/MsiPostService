@@ -1,10 +1,6 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using MsiPostOrmUtility;
 
 namespace MsiPostServer.Tests;
 
@@ -33,7 +29,6 @@ public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory
         {
             var response = await client.GetAsync(endpoint.RoutePattern.RawText);
             // Asserts that the response is not an internal server error by making sure it is not in the 500 range
-            Console.WriteLine($"Testing {endpoint.RoutePattern.RawText}");
             Assert.NotInRange((int)response.StatusCode, 500, 599);
         }
     }
