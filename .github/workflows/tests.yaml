@@ -1,4 +1,4 @@
-name: Build using dotnet ${{ matrix.dotnet-version }}
+name: Build and Tests using dotnet ${{ matrix.dotnet-version }}
 
 on: [push]
 
@@ -19,5 +19,5 @@ jobs:
         run: dotnet --version
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
