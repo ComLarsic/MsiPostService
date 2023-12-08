@@ -17,17 +17,19 @@ public class MsiPostOrmHostedService : IHostedService
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
-        => await _ormService.Context(async db =>
+        => await _ormService.Context(db =>
         {
             // Build the tables if needed
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
             // If we are testing, delete the database
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Testing")
-                await dbCreator.EnsureDeletedAsync();
+                dbCreator.EnsureDeleted();
 
             if (!dbCreator.HasTables())
-                await dbCreator.CreateTablesAsync();
+                dbCreator.CreateTables();
+
+            return Task.CompletedTask;
         });
 
     public Task StopAsync(CancellationToken cancellationToken)

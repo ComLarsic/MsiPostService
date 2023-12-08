@@ -57,6 +57,8 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
             .WithMockMojangApiWrapper()
             .WithMockMsiPostService();
 
+        var client = _webApplicationFactory.CreateClient();
+
         var ids = new List<Guid>();
         for (int i = 0; i < 5; i++)
         {
@@ -65,14 +67,14 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
                 Id = Guid.NewGuid(),
             };
 
-            var client = _webApplicationFactory.CreateClient();
+
             var dtoSerialized = JsonSerializer.Serialize(createProfileDTO);
             var postResponse = await client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
             postResponse.EnsureSuccessStatusCode();
             ids.Add(createProfileDTO.Id);
         }
 
-        var response = await _webApplicationFactory.CreateClient().GetAsync("/api/profile");
+        var response = await client.GetAsync("/api/profile");
         response.EnsureSuccessStatusCode();
 
         var responseString = await response.Content.ReadAsStringAsync();
