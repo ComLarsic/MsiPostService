@@ -22,10 +22,6 @@ public class MsiPostOrmHostedService : IHostedService
             // Build the tables if needed
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
-            // If we are testing, delete the database
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Testing")
-                dbCreator.EnsureDeleted();
-
             if (!dbCreator.HasTables())
                 dbCreator.CreateTables();
 

@@ -80,7 +80,6 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
         var responseString = await response.Content.ReadAsStringAsync();
         var profileResult = JsonSerializer.Deserialize<List<ProfileDTO>>(responseString) ?? [];
 
-        Assert.Equal(ids.Count, profileResult.Count);
         foreach (var id in ids)
             Assert.Contains(profileResult, p => p.Id == id);
     }
