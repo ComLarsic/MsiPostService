@@ -18,7 +18,6 @@ public struct Profile
     /// </summary>
     public bool IsActive { get; set; }
 
-    
 
     /// <summary>
     /// Create a new profile instance from its entity

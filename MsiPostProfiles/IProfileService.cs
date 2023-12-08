@@ -3,14 +3,14 @@
 /// <summary>
 /// The service for interacting with the MsiPost database.
 /// </summary>
-public interface IProfileService
+public interface IMsiProfileService
 {
     /// <summary>
     /// Create a new profile with the given unique identifier.
     /// </summary>
     /// <param name="id">The unqiue identifier of the minecraft account</param>
     /// <returns></returns>
-    public Task<bool> CreateProfileAsync(Guid id);
+    public Task CreateProfileAsync(Guid id);
 
     /// <summary>
     /// Get all profiles.

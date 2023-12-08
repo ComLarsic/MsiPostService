@@ -1,4 +1,4 @@
-namespace MinecraftPostServer.DTO;
+namespace MsiPostServer.DTO;
 
 /// <summary>
 /// The DTO for a profile create request.

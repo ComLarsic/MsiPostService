@@ -4,10 +4,12 @@ using MsiMojangApiWrapper.DTO;
 
 namespace MsiMojangApiWrapper;
 
+/// TODO: Turn into interface
+/// 
 /// <summary>
 /// The wrapper for interacting with the Mojang API.
 /// </summary>
-public static class MojangApiWrapper
+public class MojangApiWrapper : IMojangApiWrapper
 {
     /// <summary>
     /// The URL for the Mojang session API.
@@ -25,7 +27,7 @@ public static class MojangApiWrapper
     /// <param name="uuid"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static async Task<MojangProfileDTO?> GetProfileAsync(Guid uuid)
+    public async Task<MojangProfileDTO?> GetProfileAsync(Guid uuid)
     {
         using HttpClient client = new();
         var response = await client.GetAsync($"{MojangSessionServerUrl}/profile/{uuid}");
@@ -42,10 +44,10 @@ public static class MojangApiWrapper
     /// </summary>
     /// <param name="username"></param>
     /// <returns></returns>
-    public static async Task<MinecraftUserDTO?> GetMinecraftUserAsync(string username)
+    public async Task<MinecraftUserDTO?> GetMinecraftUserAsync(string username)
     {
         using HttpClient client = new();
-        var response = await client.GetAsync($"{MojangApiUrl}/users/profiles/minecraft/{username}");
+        var response = await client.GetAsync($"{MojangApiUrl}/users/profiles/minecraft/{username}"); // TODO: Store as constant
         if (!response.IsSuccessStatusCode)
             return null;
 

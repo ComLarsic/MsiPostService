@@ -2,67 +2,67 @@
 using Microsoft.EntityFrameworkCore;
 using MsiMojangApiWrapper;
 using MsiPostOrm.Entity;
-using MsiPostOrmService;
+using MsiPostOrmUtility;
 
 namespace MsiPostProfile;
 
 /// <summary>
 /// The service for interacting with the MsiPost database.
 /// </summary>
-public class ProfileService : IProfileService
+public class MsiProfileService : IMsiProfileService
 {
     private readonly IMsiPostOrmService _ormService;
+    private readonly IMojangApiWrapper _mojangApiWrapper;
 
-    public ProfileService(IMsiPostOrmService ormService)
-        => _ormService = ormService;
+    public MsiProfileService(IMsiPostOrmService ormService, IMojangApiWrapper mojangApiWrapper)
+    {
+        _ormService = ormService;
+        _mojangApiWrapper = mojangApiWrapper;
+    }
 
-    public async Task<bool> CreateProfileAsync(Guid id)
+    public async Task CreateProfileAsync(Guid id)
     {
         /// Check if the id is a valid minecraft profile.
-        var profile = await MojangApiWrapper.GetProfileAsync(id);
-        if (profile == null)
-            return false;
-
-        var context = _ormService.Context();
-
-        // Check if the profile already exists.
-        var existingProfile = await context.Profiles.FirstOrDefaultAsync(entity => entity.Id == id);
-
-        var profileEntity = new ProfileEntity
+        var _ = await _mojangApiWrapper.GetProfileAsync(id) ?? throw new ArgumentException("The given id is not a valid minecraft profile.");
+        await _ormService.Context(async db =>
         {
-            Id = id,
-        };
-        await context.AddAsync(profileEntity);
-        await context.SaveChangesAsync();
-        return true;
+            await db.AddAsync(new ProfileEntity
+            {
+                Id = id,
+                IsActive = true,
+            });
+            await db.SaveChangesAsync();
+        });
     }
 
     public async Task<IEnumerable<Profile>> GetProfilesAsync()
-    {
-        var context = _ormService.Context();
-        var entities = await context.Profiles.ToListAsync();
-        return entities.Select(Profile.FromEntity);
-    }
+        => await _ormService.Context(async db =>
+            {
+                var entities = await db.Profiles.ToListAsync();
+                return entities.Select(Profile.FromEntity);
+            });
 
     public async Task<Profile?> GetProfileAsync(Guid id)
-    {
-        var context = _ormService.Context();
-        var entity = await context.Profiles.FirstOrDefaultAsync(entity => entity.Id == id);
-        if (entity == null) return null;
-        return Profile.FromEntity(entity);
-    }
+        => await _ormService.Context<Profile?>(async db =>
+        {
+            var entity = await db.Profiles.FirstOrDefaultAsync(entity => entity.Id == id);
+            if (entity == null) return null;
+            return Profile.FromEntity(entity);
+        });
 
     public async Task<Profile?> GetProfileByNameAsync(string username)
     {
-        var userResult = await MojangApiWrapper.GetMinecraftUserAsync(username);
+        var userResult = await _mojangApiWrapper.GetMinecraftUserAsync(username);
         if (userResult == null)
             return null;
 
-        var context = _ormService.Context();
-        var entity = await context.Profiles.FirstOrDefaultAsync(entity => entity.Id == userResult.Value.Id);
-        if (entity == null)
-            return null;
+        return await _ormService.Context<Profile?>(async db =>
+        {
+            var entity = await db.Profiles.FirstOrDefaultAsync(entity => entity.Id == userResult.Value.Id);
+            if (entity == null)
+                return null;
 
-        return Profile.FromEntity(entity);
+            return Profile.FromEntity(entity);
+        });
     }
 }

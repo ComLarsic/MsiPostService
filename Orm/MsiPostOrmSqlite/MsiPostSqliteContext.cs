@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic;
 using MsiPostOrm;
 
 namespace MsiPostOrmSqlite;
@@ -8,19 +11,23 @@ namespace MsiPostOrmSqlite;
 /// </summary>
 public class MsiPostSqliteContext : MsiPostDbContext
 {
-    // If in debug mode, assign the database file to the temp directory.
-#if DEBUG
-    private static readonly string DB_PATH = "../Orm/MsiPostOrmSqlite/msipost.db";
-#else
-    private static readonly string DB_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "msipost.db");
-#endif
-
     /// <summary>
-    /// The path of the database file
+    /// The connection string
     /// </summary>
-    public string DbPath { get; private set; } = DB_PATH;
+    public string ConnectionString { get; private set; }
+
+    private MsiPostSqliteContext()
+        => ConnectionString = "";
+
+    [ActivatorUtilitiesConstructor]
+    public MsiPostSqliteContext(IConfiguration configuration)
+        => ConnectionString = configuration.GetSection("MsiPost:Sqlite")
+            .GetValue<string>("ConnectionString")
+                ?? throw new Exception("No connection string provided");
+
+    public MsiPostSqliteContext(string connectionString)
+        => ConnectionString = connectionString;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite($"Data Source={DbPath}");
-
+        => optionsBuilder.UseSqlite(ConnectionString);
 }

@@ -1,8 +1,6 @@
-﻿using System.Dynamic;
-using Microsoft.EntityFrameworkCore;
-using MsiPostOrm;
+﻿using MsiPostOrm;
 
-namespace MsiPostOrmService;
+namespace MsiPostOrmUtility;
 
 /// <summary>
 /// The service for interacting with the MsiPost database.
@@ -10,7 +8,14 @@ namespace MsiPostOrmService;
 public interface IMsiPostOrmService
 {
     /// <summary>
-    /// The database context for the MsiPost database.
+    /// Get the database context in a scope
     /// </summary>
-    public MsiPostDbContext Context();
+    /// <returns></returns>
+    public Task Context(Func<MsiPostDbContext, Task> func);
+
+    /// <summary>
+    /// Get the database context in a scope
+    /// </summary>
+    /// <returns></returns>
+    public Task<TResult> Context<TResult>(Func<MsiPostDbContext, Task<TResult>> func);
 }

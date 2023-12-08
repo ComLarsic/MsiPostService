@@ -1,11 +1,11 @@
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using MinecraftPostServer.DTO;
-using MsiPostOrm.Entity;
-using MsiPostOrmService;
+using MsiPostServer.DTO;
 using MsiPostProfile;
+using MsiPostUtility;
+using MsiPosts.DTO;
+using MsiPosts;
 
-namespace MinecraftPostServer;
+namespace MsiPostServer.Controllers;
 
 /// <summary>
 /// The controller for player profiles.
@@ -13,35 +13,77 @@ namespace MinecraftPostServer;
 [Route("api/[controller]")]
 public class ProfileController : Controller
 {
-    private readonly IProfileService _profileService;
+    private readonly IMsiProfileService _profileService;
+    private readonly IMsiPostService _postService;
 
-    public ProfileController(IProfileService profileService)
-        => _profileService = profileService;
+    public ProfileController(IMsiProfileService profileService, IMsiPostService postService)
+    {
+        _profileService = profileService;
+        _postService = postService;
+    }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ProfileCreateDTO profileCreateDTO)
     {
         // Create the profile.
-        var result = await _profileService.CreateProfileAsync(profileCreateDTO.Id);
-        if (!result)
-            return BadRequest("Profile Id could not be found by the Mojang api.");
+        try
+        {
+            await _profileService.CreateProfileAsync(profileCreateDTO.Id);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
         return Ok();
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public async Task<ActionResult<List<ProfileDTO>>> Get()
     {
         // Get all profiles.
-        var result = _profileService.GetProfilesAsync();
-        return Ok(result);
+        var result = await _profileService.GetProfilesAsync();
+        return result.Select(p => new ProfileDTO
+        {
+            Id = p.Id,
+            IsActive = p.IsActive,
+        }).ToList();
     }
 
     [HttpGet("{id}")]
-    public IActionResult Get(Guid id)
+    public async Task<ActionResult<ProfileDTO>> Get(Guid id)
     {
         // Get the profile with the given id.
-        var result = _profileService.GetProfileAsync(id);
-        return Ok(result);
+        var result = await _profileService.GetProfileAsync(id);
+        if (result == null)
+            return BadRequest();
+        return new ProfileDTO
+        {
+            Id = result.Value.Id,
+            IsActive = result.Value.IsActive
+        };
     }
+
+    /// <summary>
+    /// Check if a profile is active.
+    /// </summary>
+    [HttpGet("isactive/{id}")]
+    public async Task<ActionResult<ProfileIsActiveDTO>> IsActive(Guid id)
+    {
+        // Get the profile with the given id.
+        var result = await _profileService.GetProfileAsync(id);
+        if (result == null)
+            return new ProfileIsActiveDTO
+            {
+                IsActive = false,
+            };
+        return new ProfileIsActiveDTO { IsActive = true };
+    }
+
+    /// <summary>
+    /// Get all posts made by a profile
+    /// </summary>
+    [HttpGet("posts")]
+    public async Task<ActionResult<PagedResponse<PostDTO>>> GetPosts([FromQuery] Guid profile, [FromQuery] int page, [FromQuery] int pageSize)
+        => await _postService.GetPostsOfProfileAsync(profile, page, pageSize);
 }
 

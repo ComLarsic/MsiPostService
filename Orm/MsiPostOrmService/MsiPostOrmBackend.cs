@@ -1,4 +1,4 @@
-namespace MsiPostOrmService;
+namespace MsiPostOrmUtility;
 
 /// <summary>
 /// The type of backend to use for interacting with the MsiPost database.

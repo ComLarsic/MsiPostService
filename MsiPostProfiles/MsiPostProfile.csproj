@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Orm\MsiPostOrmService\MsiPostOrmService.csproj" />
+    <ProjectReference Include="../Orm/MsiPostOrmService/MsiPostOrmUtility.csproj" />
     <ProjectReference Include="..\Orm\MsiPostOrm\MsiPostOrm.csproj" />
     <ProjectReference Include="..\MsiMojangApiWrapper\MsiMojangApiWrapper.csproj" />
   </ItemGroup>

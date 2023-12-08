@@ -1,15 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-     <InternalsVisibleTo Include="MsiPostServer.Tests" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
@@ -18,12 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DTO/" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Orm/MsiPostOrmService/MsiPostOrmUtility.csproj" />
     <ProjectReference Include="..\Orm\MsiPostOrm\MsiPostOrm.csproj" />
-    <ProjectReference Include="..\Orm\MsiPostOrmSqlite\MsiPostOrmSqlite.csproj" />
-    <ProjectReference Include="..\MsiPostProfiles\MsiPostProfile.csproj" />
     <ProjectReference Include="..\MsiPostUtility\MsiPostUtility.csproj" />
-    <ProjectReference Include="..\MsiPosts\MsiPosts.csproj" />
   </ItemGroup>
 
 </Project>
