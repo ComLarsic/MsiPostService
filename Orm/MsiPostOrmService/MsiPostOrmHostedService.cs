@@ -22,7 +22,7 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
-        => await _ormService.Context(async db =>
+        => await _ormService.Context(db =>
         {
             // Build the tables if needed
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
@@ -30,6 +30,7 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
             if (Environment.GetEnvironmentVariable("MOCK_DB") != "true")
                 if (!dbCreator.HasTables())
                     dbCreator.CreateTables();
+            return Task.CompletedTask;
         });
 
     public Task StopAsync(CancellationToken cancellationToken)
