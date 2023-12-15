@@ -28,8 +28,8 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
             if (Environment.GetEnvironmentVariable("MOCK_DB") != "true")
-                if (!await dbCreator.HasTablesAsync())
-                    await dbCreator.CreateTablesAsync();
+                if (!dbCreator.HasTables())
+                    dbCreator.CreateTables();
         });
 
     public Task StopAsync(CancellationToken cancellationToken)
