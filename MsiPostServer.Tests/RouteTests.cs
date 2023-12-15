@@ -21,8 +21,7 @@ public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory
         _webApplicationFactory = new TestMsiApplicationFactory<Program>()
             .WithMockMojangApiWrapper()
             .WithMockMsiPostService()
-            .WithMockMsiProfileService()
-            .WithMockDatabase();
+            .WithMockMsiProfileService();
 
         var endpoints = _webApplicationFactory.Services
             .GetServices<EndpointDataSource>()
