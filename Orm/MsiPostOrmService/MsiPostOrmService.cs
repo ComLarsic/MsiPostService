@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -84,12 +85,29 @@ public class MsiPostOrmService : IMsiPostOrmService
     /// <returns></returns>
     public static void CreateInMemory(MsiPostOrmBackend backend, IServiceCollection services)
     {
+
         switch (backend)
         {
             case MsiPostOrmBackend.Sqlite:
-                var connection = new SqliteConnection($"DataSource=:memory:");
-                services.AddDbContext<MsiPostSqliteContext>(options =>
-                    options.UseSqlite(connection));
+                {
+                    var connection = new SqliteConnection($"DataSource=:memory:");
+                    services.AddDbContext<MsiPostSqliteContext>(options =>
+                        options.UseSqlite(connection));
+
+                    // Resolve the service provider
+                    var sp = services.BuildServiceProvider();
+
+                    // Get the DbContext from the service provider
+                    var scope = sp.CreateScope();
+                    var scopedServices = scope.ServiceProvider;
+                    var db = scopedServices.GetRequiredService<MsiPostSqliteContext>();
+
+                    // Setup tables
+                    var dbCreator = (RelationalDatabaseCreator?)db.Database.GetService<IDatabaseCreator>()
+                        ?? throw new InvalidProgramException();
+                    if (!dbCreator.HasTables())
+                        dbCreator.CreateTables();
+                }
                 break;
             default:
                 throw new NotImplementedException();
