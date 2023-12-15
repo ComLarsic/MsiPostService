@@ -1,22 +1,28 @@
 name: Run Tests
-
 on: [push]
 
 jobs:
-  build:
+  checkout:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         dotnet-version: ["7.0.x"]
-
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v3
+
+  setup-dotnet:
+    depends-on: checkout
+    steps:
+      - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Display dotnet version
         run: dotnet --version
+
+  run-tests:
+    depends-on: setup-dotnet
+    steps:
       - name: Restore dependencies
         run: dotnet restore
       - name: Test
