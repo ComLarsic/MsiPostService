@@ -2,12 +2,6 @@ name: Run Tests
 on: [push]
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: echo "Cloned repository"
-
   build:
     runs-on: ubuntu-latest
     needs: checkout
@@ -15,6 +9,8 @@ jobs:
       matrix:
         dotnet-version: ["7.0.x"]
     steps:
+      - uses: actions/checkout@v4
+        run: echo "Cloned repository"
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
@@ -32,6 +28,8 @@ jobs:
       matrix:
         dotnet-version: ["7.0.x"]
     steps:
+      - uses: actions/checkout@v4
+        run: echo "Cloned repository"
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
