@@ -27,8 +27,9 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
             // Build the tables if needed
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
-            if (!await dbCreator.HasTablesAsync())
-                await dbCreator.CreateTablesAsync();
+            if (Environment.GetEnvironmentVariable("MOCK_DB") != "true")
+                if (!await dbCreator.HasTablesAsync())
+                    await dbCreator.CreateTablesAsync();
         });
 
     public Task StopAsync(CancellationToken cancellationToken)
