@@ -12,7 +12,6 @@ jobs:
       - run: echo "Cloned repository"
 
   setup-dotnet:
-    runs-on: ubuntu-latest
     depends-on: checkout
     steps:
       - uses: actions/setup-dotnet@v3
