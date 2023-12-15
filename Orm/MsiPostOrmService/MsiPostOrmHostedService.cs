@@ -29,7 +29,7 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
 
             if (Environment.GetEnvironmentVariable("MOCK_DB") != "true")
                 if (!dbCreator.HasTables())
-                    dbCreator.CreateTables();
+                    db.Database.EnsureCreated();
             return Task.CompletedTask;
         });
 
