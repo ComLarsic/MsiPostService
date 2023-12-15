@@ -20,7 +20,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     private readonly TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
 
     /// <summary>
-    /// Test for getting all posts.
+    /// Test for getting all post   s.
     /// This tests adds a couple of posts and checks if the posts are returned.
     /// </summary>
     /// <returns></returns>

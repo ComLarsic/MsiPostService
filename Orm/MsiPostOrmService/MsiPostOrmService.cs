@@ -14,7 +14,6 @@ namespace MsiPostOrmUtility;
 /// </summary>
 public class MsiPostOrmService : IMsiPostOrmService
 {
-
     private readonly IServiceProvider _serviceProvider;
     private readonly MsiPostOrmBackend _backend;
 
@@ -61,8 +60,7 @@ public class MsiPostOrmService : IMsiPostOrmService
     /// Create the db context
     /// </summary>
     /// <param name="configuration"></param>
-    /// <returns></returns>s
-    /// <exception cref="Exception"></exception>
+    /// <summary>
     /// <exception cref="NotImplementedException"></exception>
     public static void CreateDbContext(IConfiguration configuration, IServiceCollection services)
     {

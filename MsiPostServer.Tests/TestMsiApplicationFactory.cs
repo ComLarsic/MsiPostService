@@ -81,21 +81,6 @@ public class TestMsiApplicationFactory<TProgram>
                 services.Remove(msiPostServiceDescriptor ?? throw new InvalidOperationException());
                 services.AddSingleton(CreateMockMsiPostService().Object);
             }
-
-            // Resolve the service provider
-            var sp = services.BuildServiceProvider();
-
-            // Get the DbContext from the service provider
-            using var scope = sp.CreateScope();
-            var scopedServices = scope.ServiceProvider;
-            var db = scopedServices.GetRequiredService<MsiPostSqliteContext>();
-
-            // Setup tables
-            var dbCreator = (RelationalDatabaseCreator?)db.Database.GetService<IDatabaseCreator>()
-                ?? throw new InvalidProgramException();
-            if (!dbCreator.HasTables())
-                dbCreator.CreateTables();
-
         });
     }
 
