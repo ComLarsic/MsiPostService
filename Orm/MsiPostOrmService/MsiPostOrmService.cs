@@ -1,4 +1,3 @@
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -89,10 +88,9 @@ public class MsiPostOrmService : IMsiPostOrmService
         switch (backend)
         {
             case MsiPostOrmBackend.Sqlite:
-                var connection = new SqliteConnection("Data Source=:memory:");
-                connection.Open();
+                var dbName = Guid.NewGuid().ToString(); // Create unique name to avoid conflicts
                 services.AddDbContext<MsiPostSqliteContext>(options =>
-                    options.UseSqlite(connection));
+                    options.UseSqlite($"file:{dbName}?mode=memory&cache=sharing"));
                 break;
             default:
                 throw new NotImplementedException();
