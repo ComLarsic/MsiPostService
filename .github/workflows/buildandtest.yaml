@@ -10,7 +10,6 @@ jobs:
         dotnet-version: ["7.0.x"]
     steps:
       - uses: actions/checkout@v4
-        run: echo "Cloned repository"
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
@@ -29,7 +28,6 @@ jobs:
         dotnet-version: ["7.0.x"]
     steps:
       - uses: actions/checkout@v4
-        run: echo "Cloned repository"
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
