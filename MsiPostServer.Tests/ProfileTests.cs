@@ -19,7 +19,7 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
     /// </summary>
     /// <returns></returns>
     [Fact]
-    public async Task CreateProfile()
+    public void CreateProfile()
     {
         // Add mock services
         _webApplicationFactory = new TestMsiApplicationFactory<Program>()
@@ -33,13 +33,13 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
 
         var client = _webApplicationFactory.CreateClient();
         var dtoSerialized = JsonSerializer.Serialize(createProfileDTO);
-        var postResponse = await client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
+        var postResponse = client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json")).Result;
         postResponse.EnsureSuccessStatusCode();
 
-        var response = await client.GetAsync("/api/profile/" + createProfileDTO.Id);
+        var response = client.GetAsync("/api/profile/" + createProfileDTO.Id).Result;
 
         response.EnsureSuccessStatusCode();
-        var responseString = await response.Content.ReadAsStringAsync();
+        var responseString = response.Content.ReadAsStringAsync().Result;
         var profileResult = JsonSerializer.Deserialize<ProfileDTO>(responseString);
         Assert.Equal(createProfileDTO.Id, profileResult.Id);
     }
@@ -50,7 +50,7 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
     /// </summary>
     /// <returns></returns>
     [Fact]
-    public async Task GetProfiles()
+    public void GetProfiles()
     {
         // Add mock services
         _webApplicationFactory = new TestMsiApplicationFactory<Program>()
@@ -69,15 +69,15 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
 
 
             var dtoSerialized = JsonSerializer.Serialize(createProfileDTO);
-            var postResponse = await client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
+            var postResponse = client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json")).Result;
             postResponse.EnsureSuccessStatusCode();
             ids.Add(createProfileDTO.Id);
         }
 
-        var response = await client.GetAsync("/api/profile");
+        var response = client.GetAsync("/api/profile").Result;
         response.EnsureSuccessStatusCode();
 
-        var responseString = await response.Content.ReadAsStringAsync();
+        var responseString = response.Content.ReadAsStringAsync().Result;
         var profileResult = JsonSerializer.Deserialize<List<ProfileDTO>>(responseString) ?? [];
 
         foreach (var id in ids)

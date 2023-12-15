@@ -16,7 +16,7 @@ public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory
     /// Test that none of the routes cause an internal server error when requested
     /// </summary>
     [Fact]
-    public async void NoInternalError()
+    public void NoInternalError()
     {
         _webApplicationFactory = new TestMsiApplicationFactory<Program>()
             .WithMockMojangApiWrapper()
@@ -33,7 +33,7 @@ public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory
 
         foreach (var endpoint in endpoints)
         {
-            var response = await client.GetAsync(endpoint.RoutePattern.RawText);
+            var response = client.GetAsync(endpoint.RoutePattern.RawText).Result;
             // Asserts that the response is not an internal server error by making sure it is not in the 500 range
             Assert.NotInRange((int)response.StatusCode, 500, 599);
         }

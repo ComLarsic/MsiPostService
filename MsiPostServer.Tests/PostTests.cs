@@ -31,7 +31,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     [InlineData("Bye, World!")]
     [InlineData("Hello, World! Bye, World!")]
     [InlineData("The quick brown fox jumped over the lazy dog")]
-    public async Task GetPosts(string post)
+    public void GetPosts(string post)
     {
         // Add mock services
         _webApplicationFactory = new TestMsiApplicationFactory<Program>()
@@ -46,16 +46,16 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
 
         var client = _webApplicationFactory.CreateClient();
         var dtoSerialized = JsonSerializer.Serialize(createPostDTO);
-        var postResponse = await client.PostAsync("/api/post", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
+        var postResponse = client.PostAsync("/api/post", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json")).Result;
         postResponse.EnsureSuccessStatusCode();
 
-        var postResponseString = await postResponse.Content.ReadAsStringAsync();
+        var postResponseString = postResponse.Content.ReadAsStringAsync().Result;
         var createPostResponseDTO = JsonSerializer.Deserialize<CreatePostResponseDTO>(postResponseString);
 
-        var response = await client.GetAsync("/api/post/" + createPostResponseDTO.Id);
+        var response = client.GetAsync("/api/post/" + createPostResponseDTO.Id).Result;
 
         response.EnsureSuccessStatusCode();
-        var responseString = await response.Content.ReadAsStringAsync();
+        var responseString = response.Content.ReadAsStringAsync().Result;
         var postResult = JsonSerializer.Deserialize<PostDTO>(responseString);
         Assert.Equal(createPostDTO.Text, postResult.Text);
     }
@@ -67,7 +67,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     /// <returns></returns>
     [Theory]
     [InlineData("Hello, World!", "Bye, World!")]
-    public async Task EditPost(string post, string editedPost)
+    public void EditPost(string post, string editedPost)
     {
         // Add mock services
         _webApplicationFactory = new TestMsiApplicationFactory<Program>()
@@ -82,10 +82,10 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
 
         var client = _webApplicationFactory.CreateClient();
         var dtoSerialized = JsonSerializer.Serialize(createPostDTO);
-        var postResponse = await client.PostAsync("/api/post", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
+        var postResponse = client.PostAsync("/api/post", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json")).Result;
         postResponse.EnsureSuccessStatusCode();
 
-        var postResponseString = await postResponse.Content.ReadAsStringAsync();
+        var postResponseString = postResponse.Content.ReadAsStringAsync().Result;
         var createPostResponseDTO = JsonSerializer.Deserialize<CreatePostResponseDTO>(postResponseString);
 
         var editPostDTO = new EditPostDTO
@@ -95,13 +95,13 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
         };
 
         var editDtoSerialized = JsonSerializer.Serialize(editPostDTO);
-        var editResponse = await client.PutAsync("/api/post", new StringContent(editDtoSerialized.ToString(), Encoding.UTF8, "application/json"));
+        var editResponse = client.PutAsync("/api/post", new StringContent(editDtoSerialized.ToString(), Encoding.UTF8, "application/json")).Result;
         editResponse.EnsureSuccessStatusCode();
 
-        var response = await client.GetAsync("/api/post/" + createPostResponseDTO.Id);
+        var response = client.GetAsync("/api/post/" + createPostResponseDTO.Id).Result;
 
         response.EnsureSuccessStatusCode();
-        var responseString = await response.Content.ReadAsStringAsync();
+        var responseString = response.Content.ReadAsStringAsync().Result;
         var postResult = JsonSerializer.Deserialize<PostDTO>(responseString);
         Assert.Equal(editedPost, postResult.Text);
     }
