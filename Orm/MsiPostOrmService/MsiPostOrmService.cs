@@ -85,6 +85,7 @@ public class MsiPostOrmService : IMsiPostOrmService
     public static void CreateInMemory(MsiPostOrmBackend backend, IServiceCollection services)
     {
         var name = Guid.NewGuid().ToString();
+        Console.WriteLine(name);
         switch (backend)
         {
             case MsiPostOrmBackend.Sqlite:

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using MsiMojangApiWrapper;
 using MsiMojangApiWrapper.DTO;
@@ -24,6 +25,8 @@ namespace MsiPostServer.Tests;
 public class TestMsiApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 {
+    // Flag to mock the msi database
+    private bool _mockDatabase = false;
     // Flag to mock the MojangApiWrapper
     private bool _mockMojangApiWrapper = false;
     // Flag to mock msi profile service
@@ -41,14 +44,26 @@ public class TestMsiApplicationFactory<TProgram>
 
         builder.ConfigureServices(services =>
         {
-            // Add in-memory database
-            var dbContextDescriptor = services.SingleOrDefault(
+            if (_mockDatabase)
+            {
+                // Add mock database
+                var dbContextDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(DbContextOptions<MsiPostSqliteContext>));
+
+                services.Remove(dbContextDescriptor ?? throw new InvalidOperationException());
+                services.AddSingleton(CreateMockDatabase().Object);
+            }
+            else
+            {
+                // Add in-memory database
+                var dbContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbContextOptions<MsiPostSqliteContext>));
 
-            services.Remove(dbContextDescriptor ?? throw new InvalidOperationException());
-            MsiPostOrmService.CreateInMemory(MsiPostOrmBackend.Sqlite, services);
-
+                services.Remove(dbContextDescriptor ?? throw new InvalidOperationException());
+                MsiPostOrmService.CreateInMemory(MsiPostOrmBackend.Sqlite, services);
+            }
             // Add mock IMojangApiWrapper
             if (_mockMojangApiWrapper)
             {
@@ -82,6 +97,17 @@ public class TestMsiApplicationFactory<TProgram>
                 services.AddSingleton(CreateMockMsiPostService().Object);
             }
         });
+    }
+
+    /// <summary>
+    /// Create a mock database
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private static Mock<MsiPostDbContext> CreateMockDatabase()
+    {
+        var mock = new Mock<MsiPostDbContext>();
+        return mock;
     }
 
     /// <summary>
@@ -128,6 +154,16 @@ public class TestMsiApplicationFactory<TProgram>
             CreatedAt = DateTime.Now
         });
         return mock;
+    }
+
+    /// <summary>
+    /// Enable mocking of the database
+    /// </summary>
+    /// <returns></returns>
+    public TestMsiApplicationFactory<TProgram> WithMockDatabase()
+    {
+        _mockDatabase = true;
+        return this;
     }
 
     /// <summary>
