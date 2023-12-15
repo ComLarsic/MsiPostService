@@ -89,8 +89,9 @@ public class MsiPostOrmService : IMsiPostOrmService
         {
             case MsiPostOrmBackend.Sqlite:
                 var dbName = Guid.NewGuid().ToString(); // Create unique name to avoid conflicts
+                Console.WriteLine("Using DB: " + dbName);
                 services.AddDbContext<MsiPostSqliteContext>(options =>
-                    options.UseSqlite($"file:{dbName}?mode=memory&cache=sharing"));
+                    options.UseSqlite($"file:{dbName}?mode=memory"));
                 break;
             default:
                 throw new NotImplementedException();

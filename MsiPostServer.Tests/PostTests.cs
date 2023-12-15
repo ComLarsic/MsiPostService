@@ -14,11 +14,8 @@ namespace MsiPostServer.Tests;
 /// <summary>
 /// The testing for posts
 /// </summary>
-public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
-    : IClassFixture<TestMsiApplicationFactory<Program>>
+public class PostTests
 {
-    private readonly TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
-
     /// <summary>
     /// Test for getting all posts.
     /// This tests adds a couple of posts and checks if the posts are returned.
@@ -31,8 +28,10 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     [InlineData("The quick brown fox jumped over the lazy dog")]
     public async Task GetPosts(string post)
     {
+        var webApplicationFactory = new TestMsiApplicationFactory<Program>();
+
         // Add mock services
-        _webApplicationFactory
+        webApplicationFactory
             .WithMockMojangApiWrapper()
             .WithMockMsiProfileService();
 
@@ -42,7 +41,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
             Text = post
         };
 
-        var client = _webApplicationFactory.CreateClient();
+        var client = webApplicationFactory.CreateClient();
         var dtoSerialized = JsonSerializer.Serialize(createPostDTO);
         var postResponse = await client.PostAsync("/api/post", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
         postResponse.EnsureSuccessStatusCode();
@@ -67,8 +66,10 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     [InlineData("Hello, World!", "Bye, World!")]
     public async Task EditPost(string post, string editedPost)
     {
+        var webApplicationFactory = new TestMsiApplicationFactory<Program>();
+
         // Add mock services
-        _webApplicationFactory
+        webApplicationFactory
             .WithMockMojangApiWrapper()
             .WithMockMsiProfileService();
 
@@ -78,7 +79,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
             Text = post
         };
 
-        var client = _webApplicationFactory.CreateClient();
+        var client = webApplicationFactory.CreateClient();
         var dtoSerialized = JsonSerializer.Serialize(createPostDTO);
         var postResponse = await client.PostAsync("/api/post", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
         postResponse.EnsureSuccessStatusCode();
