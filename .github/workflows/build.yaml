@@ -14,7 +14,7 @@ jobs:
 
   setup-dotnet:
     runs-on: ubuntu-latest
-    depends-on: checkout
+    needs: checkout
     steps:
       - uses: actions/setup-dotnet@v3
         with:
@@ -24,7 +24,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    depends-on: setup-dotnet
+    needs: setup-dotnet
     steps:
       - name: Restore dependencies
         run: dotnet restore
