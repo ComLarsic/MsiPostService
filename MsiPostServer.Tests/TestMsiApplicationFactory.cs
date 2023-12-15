@@ -53,6 +53,12 @@ public class TestMsiApplicationFactory<TProgram>
 
                 services.Remove(dbContextDescriptor ?? throw new InvalidOperationException());
                 services.AddSingleton(CreateMockDatabase().Object);
+
+                // Remove MsiPostOrmHostedService
+                var msiPostOrmHostedServiceDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(IHostedService) &&
+                        d.ImplementationType ==
+                            typeof(IMsiPostOrmHostedService));
             }
             else
             {

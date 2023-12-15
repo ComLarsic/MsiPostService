@@ -18,7 +18,11 @@ builder.Services.AddSingleton<IMojangApiWrapper, MojangApiWrapper>();
 builder.Services.AddSingleton<IMsiProfileService, MsiProfileService>();
 builder.Services.AddSingleton<IMsiPostService, MsiPostService>();
 
-builder.Services.AddHostedService<MsiPostOrmHostedService>();
+builder.Services.AddHostedService<IMsiPostOrmHostedService>(s =>
+{
+    var ormService = s.GetRequiredService<IMsiPostOrmService>();
+    return new MsiPostOrmHostedService(ormService);
+});
 
 var app = builder.Build();
 

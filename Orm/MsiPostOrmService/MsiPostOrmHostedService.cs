@@ -7,7 +7,12 @@ namespace MsiPostOrmUtility;
 /// <summary>
 /// The service that sets-up the orm on startup
 /// </summary>
-public class MsiPostOrmHostedService : IHostedService
+public interface IMsiPostOrmHostedService : IHostedService { }
+
+/// <summary>
+/// The service that sets-up the orm on startup
+/// </summary>
+public class MsiPostOrmHostedService : IMsiPostOrmHostedService
 {
     private readonly IMsiPostOrmService _ormService;
 
