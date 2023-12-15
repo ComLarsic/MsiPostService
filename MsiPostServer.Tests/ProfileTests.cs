@@ -11,7 +11,7 @@ namespace MsiPostServer.Tests;
 public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     : IClassFixture<TestMsiApplicationFactory<Program>>
 {
-    private readonly TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
+    private TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
 
     /// <summary>
     /// Test for creating a profile.
@@ -22,7 +22,7 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
     public async Task CreateProfile()
     {
         // Add mock services
-        _webApplicationFactory
+        _webApplicationFactory = new TestMsiApplicationFactory<Program>()
             .WithMockMojangApiWrapper()
             .WithMockMsiPostService();
 
@@ -53,7 +53,7 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
     public async Task GetProfiles()
     {
         // Add mock services
-        _webApplicationFactory
+        _webApplicationFactory = new TestMsiApplicationFactory<Program>()
             .WithMockMojangApiWrapper()
             .WithMockMsiPostService();
 

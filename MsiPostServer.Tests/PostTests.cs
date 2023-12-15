@@ -17,7 +17,9 @@ namespace MsiPostServer.Tests;
 public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     : IClassFixture<TestMsiApplicationFactory<Program>>
 {
-    private readonly TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
+    private TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
+
+
 
     /// <summary>
     /// Test for getting all post   s.
@@ -32,7 +34,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     public async Task GetPosts(string post)
     {
         // Add mock services
-        _webApplicationFactory
+        _webApplicationFactory = new TestMsiApplicationFactory<Program>()
             .WithMockMojangApiWrapper()
             .WithMockMsiProfileService();
 
@@ -68,7 +70,7 @@ public class PostTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     public async Task EditPost(string post, string editedPost)
     {
         // Add mock services
-        _webApplicationFactory
+        _webApplicationFactory = new TestMsiApplicationFactory<Program>()
             .WithMockMojangApiWrapper()
             .WithMockMsiProfileService();
 

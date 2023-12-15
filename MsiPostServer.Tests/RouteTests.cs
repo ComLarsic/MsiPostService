@@ -10,7 +10,7 @@ namespace MsiPostServer.Tests;
 public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory)
     : IClassFixture<TestMsiApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
+    private TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
 
     /// <summary>
     /// Test that none of the routes cause an internal server error when requested
@@ -18,6 +18,11 @@ public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory
     [Fact]
     public async void NoInternalError()
     {
+        _webApplicationFactory = new TestMsiApplicationFactory<Program>()
+            .WithMockMojangApiWrapper()
+            .WithMockMsiPostService()
+            .WithMockMsiProfileService();
+
         var endpoints = _webApplicationFactory.Services
             .GetServices<EndpointDataSource>()
             .SelectMany(es => es.Endpoints)
