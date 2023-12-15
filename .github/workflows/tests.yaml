@@ -9,9 +9,10 @@ jobs:
         dotnet-version: ["7.0.x"]
     steps:
       - uses: actions/checkout@v4
-      - name: Setup dotnet ${{ matrix.dotnet-version }}
+      - run: echo "Cloned repository"
 
   setup-dotnet:
+    runs-on: ubuntu-latest
     depends-on: checkout
     steps:
       - uses: actions/setup-dotnet@v3
