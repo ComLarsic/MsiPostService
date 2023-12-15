@@ -7,8 +7,10 @@ namespace MsiPostServer.Tests;
 /// <summary>
 /// Tests for the routes
 /// </summary>
-public class RouteTests
+public class RouteTests(TestMsiApplicationFactory<Program> webApplicationFactory)
+    : IClassFixture<TestMsiApplicationFactory<Program>>
 {
+    private readonly WebApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
 
     /// <summary>
     /// Test that none of the routes cause an internal server error when requested
@@ -16,13 +18,12 @@ public class RouteTests
     [Fact]
     public async void NoInternalError()
     {
-        var webApplicationFactory = new TestMsiApplicationFactory<Program>();
-        var endpoints = webApplicationFactory.Services
+        var endpoints = _webApplicationFactory.Services
             .GetServices<EndpointDataSource>()
             .SelectMany(es => es.Endpoints)
             .OfType<RouteEndpoint>();
 
-        using HttpClient client = webApplicationFactory.CreateClient();
+        using HttpClient client = _webApplicationFactory.CreateClient();
 
         foreach (var endpoint in endpoints)
         {

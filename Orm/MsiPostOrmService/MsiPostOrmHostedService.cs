@@ -22,8 +22,12 @@ public class MsiPostOrmHostedService : IHostedService
             // Build the tables if needed
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
-            if (!dbCreator.HasTables())
-                dbCreator.CreateTables();
+            // In testing environment this gets handled by the webapplication factory
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Testing")
+            {
+                if (!dbCreator.HasTables())
+                    dbCreator.CreateTables();
+            }
 
             return Task.CompletedTask;
         });

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -13,6 +14,7 @@ using MsiPostOrmUtility;
 using MsiPostProfile;
 using MsiPosts;
 using MsiPosts.DTO;
+using Newtonsoft.Json.Bson;
 
 namespace MsiPostServer.Tests;
 
@@ -35,9 +37,11 @@ public class TestMsiApplicationFactory<TProgram>
     /// <param name="builder">The <see cref="IHostBuilder"/> used to configure the test server.</param>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
+
         builder.ConfigureServices(services =>
         {
-            // Add mock database
+            // Add in-memory database
             var dbContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbContextOptions<MsiPostSqliteContext>));
@@ -77,9 +81,22 @@ public class TestMsiApplicationFactory<TProgram>
                 services.Remove(msiPostServiceDescriptor ?? throw new InvalidOperationException());
                 services.AddSingleton(CreateMockMsiPostService().Object);
             }
-        });
 
-        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
+            // Resolve the service provider
+            var sp = services.BuildServiceProvider();
+
+            // Get the DbContext from the service provider
+            using var scope = sp.CreateScope();
+            var scopedServices = scope.ServiceProvider;
+            var db = scopedServices.GetRequiredService<MsiPostSqliteContext>();
+
+            // Setup tables
+            var dbCreator = (RelationalDatabaseCreator?)db.Database.GetService<IDatabaseCreator>()
+                ?? throw new InvalidProgramException();
+            if (!dbCreator.HasTables())
+                dbCreator.CreateTables();
+
+        });
     }
 
     /// <summary>

@@ -8,8 +8,11 @@ namespace MsiPostServer.Tests;
 /// The tests for the profile controller.
 /// </summary>
 /// <param name="webApplicationFactory"></param>
-public class ProfileTests
+public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFactory)
+    : IClassFixture<TestMsiApplicationFactory<Program>>
 {
+    private readonly TestMsiApplicationFactory<Program> _webApplicationFactory = webApplicationFactory;
+
     /// <summary>
     /// Test for creating a profile.
     /// This tests creates a profile and checks if the profile is created.
@@ -19,9 +22,7 @@ public class ProfileTests
     public async Task CreateProfile()
     {
         // Add mock services
-        var webApplicationFactory = new TestMsiApplicationFactory<Program>();
-
-        webApplicationFactory
+        _webApplicationFactory
             .WithMockMojangApiWrapper()
             .WithMockMsiPostService();
 
@@ -30,7 +31,7 @@ public class ProfileTests
             Id = Guid.NewGuid(),
         };
 
-        var client = webApplicationFactory.CreateClient();
+        var client = _webApplicationFactory.CreateClient();
         var dtoSerialized = JsonSerializer.Serialize(createProfileDTO);
         var postResponse = await client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
         postResponse.EnsureSuccessStatusCode();
@@ -52,12 +53,11 @@ public class ProfileTests
     public async Task GetProfiles()
     {
         // Add mock services
-        var webApplicationFactory = new TestMsiApplicationFactory<Program>();
-        webApplicationFactory
+        _webApplicationFactory
             .WithMockMojangApiWrapper()
             .WithMockMsiPostService();
 
-        var client = webApplicationFactory.CreateClient();
+        var client = _webApplicationFactory.CreateClient();
 
         var ids = new List<Guid>();
         for (int i = 0; i < 5; i++)
@@ -66,6 +66,7 @@ public class ProfileTests
             {
                 Id = Guid.NewGuid(),
             };
+
 
             var dtoSerialized = JsonSerializer.Serialize(createProfileDTO);
             var postResponse = await client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json"));
