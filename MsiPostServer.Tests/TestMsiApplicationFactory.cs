@@ -65,6 +65,7 @@ public class TestMsiApplicationFactory<TProgram>
 
                 services.Remove(dbContextDescriptor ?? throw new InvalidOperationException());
                 MsiPostOrmService.CreateInMemory(MsiPostOrmBackend.Sqlite, services);
+                Environment.SetEnvironmentVariable("MOCK_DB", "false");
             }
             // Add mock IMojangApiWrapper
             if (_mockMojangApiWrapper)
