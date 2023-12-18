@@ -28,8 +28,21 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
             if (Environment.GetEnvironmentVariable("MOCK_DB") != "true")
-                if (!dbCreator.HasTables())
-                    db.Database.EnsureCreated();
+            {
+                // Im sorry i have to :(
+                try
+                {
+                    if (dbCreator.HasTables())
+                        return Task.CompletedTask;
+                    dbCreator.CreateTables();
+                }
+                catch
+                {
+                    if (dbCreator.HasTables())
+                        return Task.CompletedTask;
+                    dbCreator.CreateTables();
+                }
+            }
             return Task.CompletedTask;
         });
 
