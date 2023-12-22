@@ -27,21 +27,21 @@ public class MsiPostOrmHostedService : IMsiPostOrmHostedService
             // Build the tables if needed
             var dbCreator = (RelationalDatabaseCreator)db.Database.GetService<IDatabaseCreator>();
 
-            if (Environment.GetEnvironmentVariable("MOCK_DB") != "true")
+            if (Environment.GetEnvironmentVariable("MOCK_DB") == "true")
+                return Task.CompletedTask;
+
+            // Im sorry i have to :(
+            try
             {
-                // Im sorry i have to :(
-                try
-                {
-                    if (dbCreator.HasTables())
-                        return Task.CompletedTask;
-                    dbCreator.CreateTables();
-                }
-                catch
-                {
-                    if (dbCreator.HasTables())
-                        return Task.CompletedTask;
-                    dbCreator.CreateTables();
-                }
+                if (dbCreator.HasTables())
+                    return Task.CompletedTask;
+                dbCreator.CreateTables();
+            }
+            catch
+            {
+                if (dbCreator.HasTables())
+                    return Task.CompletedTask;
+                dbCreator.CreateTables();
             }
             return Task.CompletedTask;
         });
