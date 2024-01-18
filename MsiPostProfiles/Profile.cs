@@ -11,12 +11,17 @@ public struct Profile
     /// <summary>
     /// The unique identifier for this profile.
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid Uuid { get; set; }
 
     /// <summary>
     /// Whether or not the minecraft account has been claimed by a user.
     /// </summary>
     public bool IsActive { get; set; }
+
+    /// <summary>
+    /// The skin url of the minecraft account.
+    /// </summary>
+    public string SkinUrl { get; set; }
 
 
     /// <summary>
@@ -27,7 +32,7 @@ public struct Profile
     public static Profile FromEntity(ProfileEntity entity)
         => new()
         {
-            Id = entity.Id,
+            Uuid = entity.Id,
             IsActive = entity.IsActive
         };
 }

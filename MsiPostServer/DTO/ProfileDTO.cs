@@ -8,8 +8,10 @@ namespace MsiPostServer.DTO;
 [Serializable]
 public struct ProfileDTO
 {
-    [JsonPropertyName("id")]
-    public Guid Id { get; set; }
+    [JsonPropertyName("uuid")]
+    public Guid Uuid { get; set; }
     [JsonPropertyName("is_active")]
     public bool IsActive { get; set; }
+    [JsonPropertyName("skin_url")]
+    public string SkinUrl { get; set; }
 }

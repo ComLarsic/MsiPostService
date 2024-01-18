@@ -9,7 +9,10 @@ public struct MojangProfileDTO
 {
     [JsonPropertyName("id")]
     public string? Id { get; set; }
+
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
+    [JsonPropertyName("properties")]
+    public MojangProfilePropertyDTO[]? Properties { get; set; }
 }

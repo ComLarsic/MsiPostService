@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using MsiMojangApiWrapper.DTO;
 
@@ -53,5 +54,24 @@ public class MojangApiWrapper : IMojangApiWrapper
 
         var content = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<MinecraftUserDTO>(content);
+    }
+
+    /// <summary>
+    /// Get the skin url for the given UUID.
+    /// </summary>
+    /// <param name="uuid"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task<string?> GetSkinUrlAsync(Guid uuid)
+    {
+        MojangProfileDTO? user = await GetProfileAsync(uuid);
+        if (user == null)
+            return null;
+        MojangProfilePropertyDTO? property = user.Value.Properties.FirstOrDefault(p => p.Name == "textures");
+        if (property == null)
+            return null;
+        var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(property.Value.Value));
+        var skinUrl = JsonSerializer.Deserialize<MojangProfilePropertyValueDTO>(decoded);
+        return skinUrl.Textures.Value.Skin.Value.Url ?? throw new Exception("The skin url is null.");
     }
 }

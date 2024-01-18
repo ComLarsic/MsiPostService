@@ -15,7 +15,6 @@ using MsiPostOrmUtility;
 using MsiPostProfile;
 using MsiPosts;
 using MsiPosts.DTO;
-using Newtonsoft.Json.Bson;
 
 namespace MsiPostServer.Tests;
 
@@ -137,7 +136,7 @@ public class TestMsiApplicationFactory<TProgram>
         var mock = new Mock<IMsiProfileService>();
         mock.Setup(m => m.GetProfileAsync(It.IsAny<Guid>())).ReturnsAsync(new Profile
         {
-            Id = Guid.NewGuid(),
+            Uuid = Guid.NewGuid(),
         });
         return mock;
     }

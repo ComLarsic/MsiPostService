@@ -44,8 +44,9 @@ public class ProfileController : Controller
         var result = await _profileService.GetProfilesAsync();
         return result.Select(p => new ProfileDTO
         {
-            Id = p.Id,
+            Uuid = p.Uuid,
             IsActive = p.IsActive,
+            SkinUrl = p.SkinUrl
         }).ToList();
     }
 
@@ -58,8 +59,9 @@ public class ProfileController : Controller
             return BadRequest();
         return new ProfileDTO
         {
-            Id = result.Value.Id,
-            IsActive = result.Value.IsActive
+            Uuid = result.Value.Uuid,
+            IsActive = result.Value.IsActive,
+            SkinUrl = result.Value.SkinUrl
         };
     }
 

@@ -41,7 +41,7 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
         response.EnsureSuccessStatusCode();
         var responseString = response.Content.ReadAsStringAsync().Result;
         var profileResult = JsonSerializer.Deserialize<ProfileDTO>(responseString);
-        Assert.Equal(createProfileDTO.Id, profileResult.Id);
+        Assert.Equal(createProfileDTO.Id, profileResult.Uuid);
     }
 
     /// <summary>
@@ -67,7 +67,6 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
                 Id = Guid.NewGuid(),
             };
 
-
             var dtoSerialized = JsonSerializer.Serialize(createProfileDTO);
             var postResponse = client.PostAsync("/api/profile", new StringContent(dtoSerialized.ToString(), Encoding.UTF8, "application/json")).Result;
             postResponse.EnsureSuccessStatusCode();
@@ -81,6 +80,6 @@ public class ProfileTests(TestMsiApplicationFactory<Program> webApplicationFacto
         var profileResult = JsonSerializer.Deserialize<List<ProfileDTO>>(responseString) ?? [];
 
         foreach (var id in ids)
-            Assert.Contains(profileResult, p => p.Id == id);
+            Assert.Contains(profileResult, p => p.Uuid == id);
     }
 }

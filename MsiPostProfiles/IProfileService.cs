@@ -5,12 +5,20 @@
 /// </summary>
 public interface IMsiProfileService
 {
+
+    /// <summary>
+    /// Set the given profile as active.
+    /// </summary>
+    /// <param name="profile">The profile to set as active</param>
+    /// <returns></returns>
+    public Task SetActiveAsync(Profile profile);
+
     /// <summary>
     /// Create a new profile with the given unique identifier.
     /// </summary>
     /// <param name="id">The unqiue identifier of the minecraft account</param>
     /// <returns></returns>
-    public Task CreateProfileAsync(Guid id);
+    public Task<Profile> CreateProfileAsync(Guid id);
 
     /// <summary>
     /// Get all profiles.
