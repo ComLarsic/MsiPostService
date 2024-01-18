@@ -19,7 +19,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
-  run-tests:
+  integration-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,5 +33,22 @@ jobs:
         run: dotnet --version
       - name: Restore dependencies
         run: dotnet restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
+      - name: Run integration tests
+        run: dotnet test --project MsiPostServer.Tests.Integration --no-restore --verbosity normal
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ["7.0.x"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Display dotnet version
+        run: dotnet --version
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Run unit tests
+        run: dotnet test --project MsiPostServer.Tests.Unit --no-restore --verbosity normal
