@@ -34,7 +34,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Run integration tests
-        run: dotnet test --project MsiPostServer.Tests.Integration --no-restore --verbosity normal
+        run: cd MsiPostServer.Tests.Integration && dotnet test --no-restore --verbosity normal
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -51,4 +51,4 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Run unit tests
-        run: dotnet test --project MsiPostServer.Tests.Unit --no-restore --verbosity normal
+        run: cd MsiPostServer.Tests.Unit && dotnet test --no-restore --verbosity normal
