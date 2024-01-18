@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPosts", "MsiPosts\MsiPos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostUtility", "MsiPostUtility\MsiPostUtility.csproj", "{E66719C5-1E56-41D8-8BB7-5A0C48B2F796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostServer.Tests.Integration", "MsiPostServer.Tests\MsiPostServer.Tests.Integration.csproj", "{B2BC3731-D90F-465B-ACC4-5E43D0A3B770}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostServer.Tests.Integration", "MsiPostServer.Tests.Integration\MsiPostServer.Tests.Integration.csproj", "{B2BC3731-D90F-465B-ACC4-5E43D0A3B770}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiPostServer.Tests.Unit", "MsiPostServer.Tests.Unit\MsiPostServer.Tests.Unit.csproj", "{28947C08-3B71-434C-BFEF-48C2AD83C26E}"
 EndProject

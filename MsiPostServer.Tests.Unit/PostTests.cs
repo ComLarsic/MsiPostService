@@ -76,7 +76,7 @@ public class PostTests
         // Mocks
         MockDbContext.CreateDbSetMock(db => db.Profiles, new List<ProfileEntity> { });
         MockDbContext.CreateDbSetMock(db => db.Posts, new List<PostEntity> { });
-
+        MockDbContext.CreateDbSetMock(db => db.Likes, new List<LikeEntity> { });
 
         Task result = Task.CompletedTask;
         MockMsiPostOrmService.Setup(service => service.Context(It.IsAny<Func<MsiPostDbContext, Task>>()))
